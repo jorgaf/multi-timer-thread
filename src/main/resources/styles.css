@@ -1,0 +1,39 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #0a0a0a, #1c1c1c);
+    -fx-padding: 20;
+}
+
+/* Neon glow cian para los labels de temporizador */
+#timerContainer Label {
+    -fx-font-family: "Arial Black", sans-serif;
+    -fx-font-size: 24px;
+    -fx-text-fill: #00ffff;   /* cian brillante */
+    -fx-effect:
+      /* resplandor exterior grande y suave */
+      dropshadow(gaussian, rgba(0,255,255,0.6), 30, 0.0, 0, 0),
+      /* resplandor exterior intermedio más definido */
+      dropshadow(gaussian, rgba(0,255,255,1), 15, 0.0, 0, 0),
+      /* luz interior para darle profundidad */
+      inner-shadow(gaussian, rgba(0,255,255,1), 10, 0.0, 0, 0);
+}
+
+#timerContainer HBox {
+    -fx-background-color: rgba(0, 255, 255, 0.05);
+    -fx-background-radius: 8;
+    -fx-padding: 5 10;
+}
+
+
+
+/* Efecto hover para el botón */
+#startButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #f4a261, #e76f51); /* cambia degradado */
+    -fx-scale-x: 1.05;          /* agranda ligeramente en el eje X */
+    -fx-scale-y: 1.05;          /* agranda ligeramente en el eje Y */
+    -fx-cursor: hand;           /* puntero tipo mano */
+    -fx-effect: dropshadow(    /* sombra sutil para dar relieve */
+        gaussian , rgba(0,0,0,0.4) , 8, 0, 0, 2
+    );
+    -fx-transition: all 0.2s;   /* transición suave (si JavaFX lo soporta) */
+}
+
