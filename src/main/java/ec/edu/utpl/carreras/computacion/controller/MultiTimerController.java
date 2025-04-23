@@ -1,7 +1,9 @@
 package ec.edu.utpl.carreras.computacion.controller;
 
 
-import ec.edu.utpl.carreras.computacion.model.TimerModel;
+import ec.edu.utpl.carreras.computacion.domain.Timer;
+import ec.edu.utpl.carreras.computacion.adapter.outbound.TimerAdapter;
+import ec.edu.utpl.carreras.computacion.usecase.StartAllTimersUseCase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,40 +22,39 @@ public class MultiTimerController implements Initializable {
     @FXML private HBox timerContainer;
     @FXML private Button startButton;
 
-    private final List<TimerModel> models = new ArrayList<>();
+    private final List<TimerAdapter> adapters = new ArrayList<>();
+    private StartAllTimersUseCase startAllTimersUseCase;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        models.add(new TimerModel("Temporizador A", 5));
-        models.add(new TimerModel("Temporizador B", 8));
-        models.add(new TimerModel("Temporizador C", 3));
+        List<Timer> timers = List.of(
+            new Timer("Temporizador A", 5),
+            new Timer("Temporizador B", 8),
+            new Timer("Temporizador C", 6)
+        );
 
-        for(var model : models) {
+        for (Timer timer : timers) {
+            TimerAdapter adapter = new TimerAdapter(timer);
+            adapters.add(adapter);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/TimerItem.fxml"));
             try {
                 HBox itemRoot = loader.load();
                 TimerItemController itemCtrl = loader.getController();
-                itemCtrl.setModel(model);
+                itemCtrl.setAdapter(adapter);
                 timerContainer.getChildren().add(itemRoot);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        startAllTimersUseCase = new StartAllTimersUseCase(timers);
     }
 
 
 
     @FXML
     private void onStartAll() {
-
-        models.forEach(TimerModel::reset);
-
-        models.stream().map(tm -> new Thread(tm, tm.getName())).forEach(thread -> {
-            thread.setDaemon(true);
-            thread.start();
-        });
-
-        //startButton.setDisable(true);
+        startAllTimersUseCase.execute();
     }
 
 
